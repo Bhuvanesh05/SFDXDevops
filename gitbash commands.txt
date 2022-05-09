@@ -1,0 +1,79 @@
+To clone the git file for master branch:
+========================================
+$ git clone path_url
+
+To clone the perticular branch
+==============================
+$ git clone -b path_url
+
+To check the status:
+===================
+$ git status
+
+To check the log:
+=================
+$ git log
+
+To edit the clone file
+======================
+$ vim file_name
+
+Exit command
+============
+:wq
+
+before commit we should add the file it called as staging process
+command to add
+==============
+$ git add . --> add all the file $ git add file_name -->add the specific file which you want to commit
+
+Commit command
+==============
+$ git commit -m "Message that you want to show after commit the file"
+
+after commit the file is ready to push the file to the repository
+command to push
+===============
+$ git push origin main(or master or some other branch)
+
+when any changes in sub branch of the main we have to pull the file to update 
+
+command to pull:
+===============
+$ git pull origin main or master
+
+If you want to view the inside content in file:
+==============================================
+$ cat file_name
+
+Command to create the branch from main branch
+=============================================
+$ git branch branch_name
+
+To switch the branch
+====================
+$ git checkout/switch branch_name
+
+Command to Create a new file:
+=============================
+$ vi filename.txt
+
+command to merge the branches file in main/master:
+=================================================
+$ git merge branch_name    ---->(which branch you want to merge with master/main)
+
+To cancel the commit which you wrongly pushed in repository:
+===========================================================
+$ git revert f861dc0 --no-edit    ------>(f861dc0 is a commit id)
+
+To get the current commit ID:
+=============================
+$ git rev-parse head
+
+To get the previous Commit Id:
+==============================
+$ git rev-parse head^
+
+Command to view all files
+=========================
+$ git ls-files

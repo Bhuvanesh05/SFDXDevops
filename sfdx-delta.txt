@@ -1,0 +1,71 @@
+Important note for Windows users:
+If you run SGD on a Windows system, make sure to use double quotes to prevent the parameters from being interpreted by the terminal
+Command for install:
+====================
+
+install --global sfdx-cli
+sfdx plugins:install sfdx-git-delta
+
+USAGE
+  $ sfdx sgd:source:delta 
+
+To get the previous and current commit Id:
+=-======-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output .
+
+To mention in specific path
+=--========================
+sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta
+
+which means:
+
+Analyze the difference between HEAD (latest commit) and HEAD^ (previous commit), and output the result in the current folder.
+
+The sfdx sgd:source:delta command produces 2 usefull artifacts:
+1.A package.xml file
+2.A destructiveChanges.xml file
+
+To deploy the delta changes is:
+
+sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
+
+OPTIONS
+  -D, --ignore-destructive=ignore-destructive                                       file listing paths to explicitly
+                                                                                    ignore for any destructive actions
+
+  -N, --include-destructive=include-destructive                                     file listing paths to explicitly
+                                                                                    include for any destructive actions
+
+  -W, --ignore-whitespace                                                           ignore git diff whitespace (space,
+                                                                                    tab, eol) changes
+
+  -a, --api-version=api-version                                                     [default: 54] salesforce API version
+
+  -d, --generate-delta                                                              generate delta files in [--output]
+                                                                                    folder
+
+  -f, --from=from                                                                   (required) commit sha from where the
+                                                                                    diff is done [git rev-list
+                                                                                    --max-parents=0 HEAD]
+
+  -i, --ignore=ignore                                                               file listing paths to explicitly
+                                                                                    ignore for any diff actions
+
+  -n, --include=include                                                             file listing paths to explicitly
+                                                                                    include for any diff actions
+
+  -o, --output=output                                                               [default: ./output] source package
+                                                                                    specific output
+
+  -r, --repo=repo                                                                   [default: .] git repository location
+
+  -s, --source=source                                                               [default: .] source folder focus
+                                                                                    location related to --repo
+
+  -t, --to=to                                                                       [default: HEAD] commit sha to where
+                                                                                    the diff is done
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation

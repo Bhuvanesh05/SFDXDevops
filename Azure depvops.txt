@@ -1,0 +1,48 @@
+<<<<<<< HEAD
+//check conflict
+=======
+//my new changes
+>>>>>>> a41235bbc39e788d69e9ddf538a1ff7c217512dd
+To copy the task
+================
+- task: CopyFiles@2
+    displayName: Copy Saleforce files to staging directory
+    inputs:
+      SourceFolder: $(Build.SourcesDirectory)
+      Contents: >-
+        Assets/**
+
+        delta/**
+      TargetFolder: $(Build.ArtifactStagingDirectory)
+
+path directory
+==============
+
+ Utility: 
+
+Source folder:
+
+$(Build.SourcesDirectory)
+
+Contents:
+
+/$(BuildConfiguration)//?(*.exe|*.dll|*.pdb)
+
+Target folder:
+
+$(Build.ArtifactStagingDirectory)
+
+
+ Utility: Publish Build Artifacts
+
+Path to publish:
+$(Build.ArtifactStagingDirectory)
+
+TIPS:
+=====
+
+On Azure Pipelines and some versions of TFS, two different variables point to the staging directory: Build.ArtifactStagingDirectory and Build.StagingDirectory. These are interchangeable.
+
+The directory referenced by Build.ArtifactStagingDirectory is cleaned up after each build.
+
+Deleting a build that published Artifacts to a file share will result in the deletion of all Artifacts in that UNC path.

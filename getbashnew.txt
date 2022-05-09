@@ -1,0 +1,19 @@
+Get all update and del lines as excel format
+============================================
+git log --pretty=format:'"%h","%an","%aD","%s",' --shortstat --no-merges | paste - - - > log.csv
+
+
+Get all open pull request
+=========================
+
+$ gh pr list
+
+There are no open pull requests in Bhuvanesh05/Commands
+
+Get all pull request
+====================
+$ git ls-remote origin 'pull/*/head'
+32f1fefeb8e62ce77f5140a96c4f553567501199        refs/pull/1/head
+acc1c00cc361e259401945682c1d6dbc91dcca50        refs/pull/2/head
+038cffb8a3a813f828aaf53bcc7f9c44bc23367a        refs/pull/3/head
+a707146a92e3c466905caa0ab3787f3392f27909        refs/pull/4/head

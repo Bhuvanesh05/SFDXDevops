@@ -1,0 +1,86 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml refs/heads/master
+
+
+name: $(BuildDefinitionName).$(Date:yyMMdd)$(Rev:.r)
+
+trigger:
+- build/RestAPI
+parameters:       
+- name: Sandboxname
+  displayName: Sandbox Name
+  type: string
+  default: '' 
+- name: Refreshsand
+  displayName: Refresh sandbox
+  type: boolean 
+  default: false
+- name: Sandboxid
+  displayName: Sandbox ID
+  type: string
+  default: ''
+- name: LicenseType
+  displayName: License Type 
+  type: string
+  default: ''
+  values:
+    - DEVELOPER
+    - DEVELOPER PRO
+    - PARTIAL COPY
+    - Full COPY
+variables:
+  Sandbox_ID: ${{ parameters.Accountid }}
+  Sandbox_Name: ${{ parameters.Sandboxname }}
+  Sandbox_type: ${{parameters.LicenseType.values}}
+jobs:
+- job: SFDX_RestAPI_Pipeline
+  displayName: SFDX RESTAPI Callout
+  timeoutInMinutes: 10000
+  cancelTimeoutInMinutes: 1
+  pool:
+    vmImage: ubuntu-latest 
+  steps:
+    - checkout: self
+      clean: true
+      persistCredentials: true
+    - task: PowerShell@2
+      name: RestAccessToken
+      displayName: Generate Access Token
+      inputs:
+       targetType: 'inline'
+       script: |
+            $url = "https://login.salesforce.com/services/oauth2/token"
+            $postParams = @{
+              grant_type    = "password";
+              client_id     = "3MVG9pRzvMkjMb6m1QPIFMudXWT5BnSpe8r._hT_ybwiW879HMK94vNsmzlrHxMj7.YQc_6d0RO4UrTl0Ej09";
+              client_secret = "73EE65AD8E6120F30738AD62422053D17D821E24CB9BCFE036AAFF71CC0D2DA5";
+              username      = "kumarbhuvanesh625@resourceful-raccoon-1fy2x0.com";
+              password      = "Bhuvakies@321PW8XyERf7e8isfmalaBGbDlL";
+               }
+             $access_token1 = Invoke-RestMethod -Uri $url -Method POST -Body $postParams
+             Write-Host $access_token1.access_token
+             Write-Host "##vso[task.setvariable variable=access_token2;isOutput=true]$($access_token1.access_token)"
+    - task: PowerShell@2
+      displayName: Refreshing SandBox
+      env:
+        accesstoken: $(RestAccessToken.access_token2)
+      
+      inputs:
+        targetType: 'inline'
+        script: |
+         Write-host "$env:accesstoken"
+         condition: and(succeeded(), eq('${{ parameters.DeploymentType }}', 'Delta'))
+         $header = @{"Authorization" = "OAuth "+ "$env:accesstoken"  }
+         $sanboxname = '$(SandboxName)'
+         $url = "https://resourceful-raccoon-1fy2x0-dev-ed.my.salesforce.com/services/data/v53.0/tooling/sobjects/SandboxInfo/"+$sanboxname
+         $contenttype = "application/json"
+         $descr = '$(Sandbox_type)'
+         $bod = @{
+            LicenseType = $descr
+            AutoActivate = "true"
+               }
+         $bod1 = $bod | ConvertTo-Json
+         $result = Invoke-RestMethod -Uri $url -Headers $header -contenttype $contenttype -Method Patch -Body $bod1
+         Write-Host $result

@@ -1,0 +1,60 @@
+sfdx Command Authorize org:
+==========================
+
+sfdx force:auth:web:login --setalias vscodeOrg --instanceurl https://login.salesforce.com --setdefaultusername
+
+Basic sfdx cmd to retrieve and deploy the component:
+===================================================
+
+sfdx force:source:retrieve -x manifest/package.xml -u username
+sfdx force:source:deploy -x manifest/. -u username
+
+To view the current connected org lists:
+========================================
+sfdx force:org:list
+
+Salesforce security token(It is used to authorize the org and access security):-
+=============================
+
+Your Salesforce security token is a case-sensitive alphanumeric key that is used in combination with a password to access Salesforce via API. 
+The purpose of the token is to improve the security between Salesforce users and Salesforce.com in the case of a compromised account.
+
+mdapi retrieve:(METADATAAPI)
+===============
+
+sfdx force:mdapi:retrieve -u aliasname -k manifest/package.xml -r src/
+ 
+After mdapi retrieve the all components retrieve as zipped file and (This is the difference from normal mainfest retrive and mdapi retreive) 
+
+Command to unZipped file: 
+=========================
+expand-archive -path 'src\unpackaged.zip' -destinationpath '.\unzipped'
+
+Command to Delete unZipped file:
+================================
+Remove-item 'src/unpackaged.zip' -recurse
+
+
+Command to convert the unzipped files to Force-app:
+==================================================
+
+sfdx force:mdapi:convert -r unzipped/unpackaged/ -d force-app/
+
+Command to convert Force-app metadata to Source :
+=================================================
+
+sfdx force:source:convert -r force-app/ -d src/
+
+Command to deploy metadata in Org:
+==================================
+
+sfdx force:mdapi:deploy -u Aliasname -d src/ -w 10
+
+Authorize With credentials:
+===========================
+sfdx auth:jwt:grant --clientid 04580y4051234051 \ --jwtkeyfile /Users/jdoe/JWT/server.key --username jdoe@acdxgs0hub.org \ --instanceurl https://test.salesforce.com
+
+jenkins authorization:
+=====================
+
+force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
