@@ -1,0 +1,34 @@
+Creating the 2gp managed package:
+------------------------------------
+sfdx force:package:create --name "sample2gp" --path force-app --packagetype Managed --targetdevhubusername  alliesname
+ -->Package Id  0Ho5j000000TNJ4CAO
+
+Creating the version with installation key and must include the --codecoverage
+-------------------------------------------------------------------------------
+sfdx force:package:version:create --package "sample2gp" --installationkey test1234 --wait 10 -v vscodeOrg--codecoverage
+
+ »   Warning: Based on feedback from Salesforce Partners, we’re enhancing the package ancestry feature. Starting in Spring ‘22, the ancestor version field is required when you  
+ »   create a package version. Look for more details, including how to override the ancestry requirement, in the packaging section of the Spring ‘22 Salesforce Release Notes    
+Request in progress. Sleeping 30 seconds. Will wait a total of 600 more seconds before timing out. Current Status='Initializing'
+Request in progress. Sleeping 30 seconds. Will wait a total of 570 more seconds before timing out. Current Status='Verifying metadata'
+sfdx-project.json has been updated.
+Successfully created the package version [08c5j000000PBOnAAO]. Subscriber Package Version Id: 04t5j000000QgwqAAC
+Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5j000000QgwqAAC
+
+Promoting the version which we created
+-----------------------------------------
+sfdx force:package:version:promote -p sample2gp@1.0.0-1 -v vscodeOrg
+ -->Successfully promoted the package version, ID: 04t5j000000QgwqAAC, to released. Starting in Winter ‘21, only unlocked package versions that have met the minimum 75% code coverag
+
+To install the 2gp managed packed to target org
+---------------------------------------------------
+sfdx force:package:install --package "sample2gp@1.0.0-1"  --targetusername  vscodeOrg  --installationkey test1234 --wait 10 --publishwait 10
+
+Command for 2gpackage status
+--------------------------------
+sfdx force:package:version:report --package "sample2gp@1.0.0-1"
+
+Waiting for the package install request to complete. Status = IN_PROGRESS
+Waiting for the package install request to complete. Status = IN_PROGRESS
+Waiting for the package install request to complete. Status = IN_PROGRESS
+Successfully installed package [04t5j000000QgwqAAC]
